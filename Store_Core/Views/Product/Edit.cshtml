@@ -1,0 +1,27 @@
+﻿@model Store.Core.Application.DTOs.ProductCreateUpdateDto
+
+@{
+    ViewBag.Title = "Edit Product";
+}
+
+<h2>Edit Product</h2>
+@using (Html.BeginForm())
+{
+    <div>
+        <label>Product Name</label>
+        @Html.TextBoxFor(m => m.ProductName)
+    </div>
+    <div>
+        <label>Quantity In Stock</label>
+        @Html.TextBoxFor(m => m.QuantityInStock)
+    </div>
+    <div>
+        <label>Unit Price</label>
+        @Html.TextBoxFor(m => m.UnitPrice)
+    </div>
+    <div>
+        <label>Supplier ID</label>
+        @Html.TextBoxFor(m => m.SupplierID)
+    </div>
+    <button type="submit">Save Changes</button>
+}

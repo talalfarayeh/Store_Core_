@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Store.Core.Application.DTOs.ProductDto>
+
+@{
+    ViewBag.Title = "Products with Suppliers";
+}
+<div class="container">
+    <h1>Products List</h1>
+    <main>
+        <p>
+            <a href="@Url.Action("Create", "Product")" class="btn btn-primary">Add New Product</a>
+        </p>
+  
+    <table class="table">
+        <thead>
+            <tr>
+                
+                <th>Product Name</th>
+                <th>Quantity In Stock</th>
+                <th>Unit Price</th>
+                <th>Supplier Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    
+                    <td>@product.ProductName</td>
+                    <td>@product.QuantityInStock</td>
+                    <td>@product.UnitPrice</td>
+                    <td>@product.SupplierName</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Product", new { id = product.ProductID })" class="btn btn-warning">Edit</a>
+                            @*                             <a href="@Url.Action("Details", "Supplier", new { id = supplier.SupplierID })" class="btn btn-info">Details</a>
+ *@                            <a href="@Url.Action("Delete", "Product", new { id = product.ProductID })" class="btn btn-danger">Delete</a>
+                        </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </main>
+</div>

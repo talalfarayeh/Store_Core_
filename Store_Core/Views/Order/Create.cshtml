@@ -1,0 +1,22 @@
+﻿@model Store.Core.Application.DTOs.OrderDto
+
+<div class="container">
+    <h1>Add/Edit Order</h1>
+    @using (Html.BeginForm())
+    {
+        @Html.HiddenFor(m => m.OrderID)
+        <div class="form-group">
+            <label>Customer Name</label>
+            @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label>Order Date</label>
+            @Html.TextBoxFor(m => m.OrderDate, new { @class = "form-control", type = "date" })
+        </div>
+        <div class="form-group">
+            <label>Product ID</label>
+            @Html.TextBoxFor(m => m.ProductID, new { @class = "form-control" })
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    }
+</div>

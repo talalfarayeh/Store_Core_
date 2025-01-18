@@ -1,0 +1,31 @@
+﻿@model Store.Infrastructure.Models.Supplier
+
+@{
+    ViewBag.Title = "Edit Supplier";
+}
+
+<div class="container">
+    <header>
+        <h1>Edit Supplier</h1>
+    </header>
+    <main>
+        @using (Html.BeginForm("Edit", "Supplier", FormMethod.Post))
+        {
+            @Html.HiddenFor(m => m.SupplierID)
+
+            <div class="form-group">
+                <label for="SupplierName">Supplier Name</label>
+                @Html.TextBoxFor(m => m.SupplierName, new { @class = "form-control", placeholder = "Enter Supplier Name" })
+                @Html.ValidationMessageFor(m => m.SupplierName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="Phone">Phone</label>
+                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Enter Phone Number" })
+                @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        }
+    </main>
+</div>

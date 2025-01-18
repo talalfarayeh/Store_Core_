@@ -1,0 +1,20 @@
+﻿@model Store.Core.Application.DTOs.ProductDto
+
+@{
+    ViewBag.Title = "Delete Product";
+}
+
+<h2>Are you sure you want to delete this product?</h2>
+<div>
+    <p><strong>Product Name:</strong> @Model.ProductName</p>
+    <p><strong>Supplier:</strong> @Model.SupplierName</p>
+    <p><strong>Unit Price:</strong> @Model.UnitPrice</p>
+    <p><strong>Quantity In Stock:</strong> @Model.QuantityInStock</p>
+</div>
+
+@using (Html.BeginForm("Delete", "Product", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.ProductID)
+    <button type="submit">Delete</button>
+    <a href="@Url.Action("Index", "Product")" class="btn btn-secondary">Cancel</a>
+}

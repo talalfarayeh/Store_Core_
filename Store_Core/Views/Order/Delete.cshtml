@@ -1,0 +1,35 @@
+﻿@model Store.Core.Application.DTOs.OrderDto
+
+@{
+    ViewBag.Title = "Delete Order";
+}
+
+<div class="container">
+    <header>
+        <h1>Delete Order</h1>
+    </header>
+    <main>
+        <dl class="dl-horizontal">
+            <dt>Customer Name</dt>
+            <dd>@Model.CustomerName</dd>
+
+            <dt>Order Date</dt>
+            <dd>@Model.OrderDate.ToString("yyyy-MM-dd")</dd>
+
+            <dt>Quantity</dt>
+            <dd>@Model.Quantity</dd>
+
+            <dt>Product</dt>
+            <dd>@Model.ProductName</dd>
+        </dl>
+
+        <p>Are you sure you want to delete this order?</p>
+
+        @using (Html.BeginForm("Delete", "Order", FormMethod.Post))
+        {
+            @Html.HiddenFor(m => m.OrderID)
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="@Url.Action("Index", "Order")" class="btn btn-secondary">Cancel</a>
+        }
+    </main>
+</div>
