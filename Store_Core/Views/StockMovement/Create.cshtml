@@ -1,0 +1,40 @@
+﻿@model Store.Core.Application.DTOs.StockMovementDto
+
+@{
+    ViewBag.Title = "Add New Stock Movement";
+}
+
+<div class="container">
+    <header>
+        <h1>Add New Stock Movement</h1>
+    </header>
+    <main>
+        @using (Html.BeginForm("Create", "StockMovement", FormMethod.Post))
+        {
+            <div class="form-group">
+                <label>Product ID</label>
+                @Html.TextBoxFor(m => m.ProductID, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="MovementType">Movement Type</label>
+                @Html.DropDownListFor(m => m.MovementType, new SelectList(new[] { "In", "Out" }), "Select Movement Type", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.MovementType, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="Quantity">Quantity</label>
+                @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control", placeholder = "Enter Quantity" })
+                @Html.ValidationMessageFor(m => m.Quantity, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="MovementDate">Movement Date</label>
+                @Html.TextBoxFor(m => m.MovementDate, new { @class = "form-control", type = "date" })
+                @Html.ValidationMessageFor(m => m.MovementDate, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-success">Save</button>
+        }
+    </main>
+</div>

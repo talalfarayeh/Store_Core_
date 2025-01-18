@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Store.Core.Application.DTOs.StockMovementDto>
+
+<div class="container">
+    <header>
+        <h1>Stock Movement Management</h1>
+    </header>
+    <main>
+        <a href="@Url.Action("Create", "StockMovement")" class="btn btn-primary">Add New Movement</a>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Movement ID</th>
+                    <th>Product Name</th>
+                    <th>Movement Type</th>
+                    <th>Quantity</th>
+                    <th>Movement Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.StockMovementID</td>
+                        <td>@item.ProductName</td>
+                        <td>@item.MovementType</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.MovementDate.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </main>
+</div>

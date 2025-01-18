@@ -1,0 +1,19 @@
+﻿using Store.Core.Application.DTOs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Store.Core.Application.Sarvice.ISarvice
+{
+    public interface IOrderService
+    {
+
+        Task<List<OrderDto>> GetAllOrdersWithProductsAsync();
+        Task<OrderDto> GetOrderByIdAsync(int id);
+        Task AddOrderAsync(OrderDto orderDto);
+        Task UpdateOrderAsync(OrderDto orderDto);
+        Task DeleteOrderAsync(int id);
+    }
+}

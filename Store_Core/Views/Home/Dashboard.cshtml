@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="dashboard-container">
+    <header>
+        <h1>Welcome to Store Management System</h1>
+        <p>Choose a section to manage:</p>
+    </header>
+    <main class="dashboard-menu">
+        <a href="@Url.Action("Index", "Supplier")" class="dashboard-item suppliers">
+            <h2>Manage Suppliers</h2>
+        </a>
+        <a href="@Url.Action("Index", "Product")" class="dashboard-item products">
+            <h2>Manage Products</h2>
+        </a>
+        
+        <a href="@Url.Action("Index", "Order")" class="dashboard-item products">
+            <h2>Manage Order</h2>
+        </a>
+        <a href="@Url.Action("Index", "StockMovement")" class="dashboard-item products">
+            <h2>Manage StockMovement</h2>
+        </a>
+    </main>
+</div>
