@@ -17,11 +17,22 @@ namespace Store.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<List<Order>> GetAllOrdersWithProductsAsync()
+        public async Task<(List<Order>,int)> GetAllOrdersWithProductsAsync(string searchTerm, int pageNumber, int pageSize)
         {
-            return await _context.Orders
+           var query =  _context.Orders
               .Include(o => o.Product)
-              .ToListAsync();
+              .AsQueryable();
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(p => EF.Functions.Like(p.CustomerName, $"%{searchTerm}%"));
+            }
+            var totalRecords = await query.CountAsync();
+            var pagedOrders = await query
+                  .Skip((pageNumber - 1) * pageSize)
+                  .Take(pageSize)
+                  .ToListAsync();
+
+            return (pagedOrders, totalRecords);
         }
 
         public async Task<Order> GetOrdersWithProductsByIdAsync(int id)

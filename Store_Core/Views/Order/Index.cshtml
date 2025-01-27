@@ -1,34 +1,114 @@
-﻿@model IEnumerable<Store.Core.Application.DTOs.OrderDto>
+﻿@model Store_Core.ViewModels.OrderViewModel
 
-<div class="container">
-    <h1>Orders</h1>
-    <a href="@Url.Action("Create", "Order")" class="btn btn-primary">Add New Order</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Customer Name</th>
-                <th>Quantity</th>
-                <th>Order Date</th>
-                <th>Product Name</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in Model)
-            {
-                <tr>
-                    <td>@order.OrderID</td>
-                    <td>@order.CustomerName</td>
-                    <td>@order.Quantity</td>
-                    <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                    <td>@order.ProductName</td>
-                    <td>
-                        <a href="@Url.Action("Edit", "Order", new { id = order.OrderID })" class="btn btn-warning">Edit</a>
-                        <a href="@Url.Action("Delete", "Order", new { id = order.OrderID })" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Product List</h1>
+        <a href="@Url.Action("Create", "Order")" class="btn btn-primary w-100">Add New Order</a>
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <form method="get" action="/Order/Index" class="row g-3">
+                    <div class="col-md-8">
+                        <input type="text"
+                               name="searchTerm"
+                               value="@Model.SearchTerm"
+                               placeholder="Search Products"
+                               class="form-control" />
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>CustomerName</th>
+                            <th>ProductName</th>
+                            <th>Quantity</th>
+                            <th>OrderDate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Orders.Any())
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No products found.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var product in Model.Orders)
+                            {
+                                <tr>
+                                    <td>@product.CustomerName</td>
+                                    <td>@product.ProductName</td>
+                                    <td>@product.Quantity.ToString("C")</td>
+                                    <td>@product.OrderDate</td>
+                                    <td>
+                                        <a href="@Url.Action("Edit", "Product", new { id = product.OrderID })" class="btn btn-warning">Edit</a>
+                                        <a href="@Url.Action("Delete", "Product", new { id =product.OrderID })" class="btn btn-danger">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?searchTerm=@Model.SearchTerm&pageNumber=@(Model.CurrentPage - 1)&pageSize=@Model.PageSize">Previous</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                }
+
+                @for (int i = 1; i <= (Model.TotalRecords + Model.PageSize - 1) / Model.PageSize; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="?searchTerm=@Model.SearchTerm&pageNumber=@i&pageSize=@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < (Model.TotalRecords + Model.PageSize - 1) / Model.PageSize)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?searchTerm=@Model.SearchTerm&pageNumber=@(Model.CurrentPage + 1)&pageSize=@Model.PageSize">Next</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

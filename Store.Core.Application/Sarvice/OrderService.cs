@@ -24,11 +24,11 @@ namespace Store.Core.Application.Sarvice
             _productRepository = productRepository;
         }
 
-        public async Task<List<OrderDto>> GetAllOrdersAsync()
+       /* public async Task<List<OrderDto>> GetAllOrdersAsync()
         {
             var orders = await _orderRepository.GetAllOrdersWithProductsAsync();
             return orders.Adapt<List<OrderDto>>();
-        }
+        }*/
 
         public async Task  AddOrderAsync(OrderDto orderDto)
         {
@@ -93,10 +93,13 @@ namespace Store.Core.Application.Sarvice
             await _genericRepository.DeleteAsync(existingOrder);
         }
 
-        public async Task<List<OrderDto>> GetAllOrdersWithProductsAsync()
+        public async Task<PagedResponse<OrderDto>> GetAllOrdersWithProductsAsync(string searchTerm, int pageNumber, int pageSize)
         {
-            var orders = await _orderRepository.GetAllOrdersWithProductsAsync();
-            return orders.Adapt<List<OrderDto>>();
+             var (orders, totalRecords) = await _orderRepository.GetAllOrdersWithProductsAsync( searchTerm,  pageNumber,  pageSize);
+
+            var orderDtos = orders.Adapt<List<OrderDto>>();
+
+            return new PagedResponse<OrderDto> (orderDtos,  totalRecords, pageNumber, pageSize );
         }
     }
 }

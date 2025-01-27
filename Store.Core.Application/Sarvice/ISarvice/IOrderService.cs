@@ -10,7 +10,7 @@ namespace Store.Core.Application.Sarvice.ISarvice
     public interface IOrderService
     {
 
-        Task<List<OrderDto>> GetAllOrdersWithProductsAsync();
+        Task<PagedResponse<OrderDto>> GetAllOrdersWithProductsAsync(string searchTerm, int pageNumber, int pageSize);
         Task<OrderDto> GetOrderByIdAsync(int id);
         Task AddOrderAsync(OrderDto orderDto);
         Task UpdateOrderAsync(OrderDto orderDto);

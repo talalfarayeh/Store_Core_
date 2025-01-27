@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Store.Core.Application.DTOs;
 using Store.Core.Application.Sarvice.ISarvice;
+using Store_Core.ViewModels;
 
 namespace Store_Core.Controllers
 {
@@ -13,10 +14,18 @@ namespace Store_Core.Controllers
             _orderService = orderService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm = "", int pageNumber = 1, int pageSize = 10)
         {
-            var orders = await _orderService.GetAllOrdersWithProductsAsync();
-            return View(orders);
+            var pagedResponse = await _orderService.GetAllOrdersWithProductsAsync(searchTerm, pageNumber, pageSize);
+            var ViewModel = new OrderViewModel
+            {
+                Orders = pagedResponse.Data.ToList(),
+                TotalRecords = pagedResponse.TotalRecords,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                SearchTerm = searchTerm
+            };
+            return View(ViewModel);
         }
 
         public IActionResult Create()

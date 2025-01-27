@@ -8,6 +8,7 @@ namespace Store.Core.Application.DTOs
 {
     public class ProductCreateUpdateDto
     {
+        public int ProductID { get; set; }
         public string ProductName { get; set; }
         public int QuantityInStock { get; set; }
         public decimal UnitPrice { get; set; }

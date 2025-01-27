@@ -72,5 +72,26 @@ namespace Store.Infrastructure.Repositories
             _dbcontext.UpdateRange(entities);
             await _dbcontext.SaveChangesAsync();
         }
+        public async Task<(List<T> Data, int TotalRecords)> GetPagedDataAsync(int pageNumber, int pageSize, IQueryable<T> filteredData)
+        {
+             
+            var totalRecords = await filteredData.CountAsync();
+
+           
+            var data = await filteredData
+                .Skip((pageNumber - 1) * pageSize)  
+                .Take(pageSize)  
+                .ToListAsync();  
+
+            
+            return (data, totalRecords);
+        }
+
+
+        public async Task AddRangeListAsync(IEnumerable<T> entities)
+        {
+            await _dbcontext.Set<T>().AddRangeAsync(entities);
+            await _dbcontext.SaveChangesAsync();
+        }
     }
 }

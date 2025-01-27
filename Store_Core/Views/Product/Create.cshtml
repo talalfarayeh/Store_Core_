@@ -1,28 +1,50 @@
-﻿@model Store.Core.Application.DTOs.ProductCreateUpdateDto
+﻿@model Store_Core.ViewModels.AddMultipleProductsViewModel
 
 @{
-    ViewBag.Title = "Add New Product";
+    ViewBag.Title = "Add Multiple Products";
 }
 
-<h2>Add New Product</h2>
-@using (Html.BeginForm())
-{
+<div class="container">
+    <h1>Add Multiple Products</h1>
+    <form asp-action="Create" method="post">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity In Stock</th>
+                    <th>Unit Price</th>
+                    <th>Supplier Id</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Products.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input type="text" asp-for="Products[@i].ProductName" class="form-control" />
+                            <span asp-validation-for="Products[@i].ProductName" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <input type="number" asp-for="Products[@i].QuantityInStock" class="form-control" />
+                            <span asp-validation-for="Products[@i].QuantityInStock" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <input type="number" asp-for="Products[@i].UnitPrice" class="form-control" />
+                            <span asp-validation-for="Products[@i].UnitPrice" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <input type="text" asp-for="Products[@i].SupplierID" class="form-control" />
+                            <span asp-validation-for="Products[@i].SupplierID" class="text-danger"></span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-    <div>
-        <label>Product Name</label>
-        @Html.TextBoxFor(m => m.ProductName)
-    </div>
-    <div>
-        <label>Quantity In Stock</label>
-        @Html.TextBoxFor(m => m.QuantityInStock)
-    </div>
-    <div>
-        <label>Unit Price</label>
-        @Html.TextBoxFor(m => m.UnitPrice)
-    </div>
-    <div>
-        <label>Supplier ID</label>
-        @Html.TextBoxFor(m => m.SupplierID)
-    </div>
-    <button type="submit">Save</button>
+        <button type="submit" class="btn btn-primary">Add Products</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

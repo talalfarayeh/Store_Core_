@@ -28,6 +28,9 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IStockMovementRepository, StockMovementRepository>();
 
+builder.Logging.AddConsole();  
+builder.Logging.AddDebug();
+
 
 MappingConfig.RegisterMappings();
 var app = builder.Build();

@@ -9,7 +9,7 @@ namespace Store.Infrastructure.Repositories.IRepositories
 {
     public interface IOrderRepository
     {
-        Task<List<Order>> GetAllOrdersWithProductsAsync();
+        Task<(List<Order>,int)> GetAllOrdersWithProductsAsync(string searchTerm, int pageNumber, int pageSize);
         Task<Order> GetOrdersWithProductsByIdAsync(int id);
     }
 }
