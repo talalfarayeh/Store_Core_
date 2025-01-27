@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.Core.Application.DTOs;
  
@@ -9,6 +10,7 @@ using Store.Infrastructure.Models;
 using Store_Core.ViewModels;
 namespace Store_Core.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -116,11 +118,11 @@ namespace Store_Core.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(ProductCreateUpdateDto productDto)
         {
-            if (!ModelState.IsValid)
+           /* if (!ModelState.IsValid)
             {
                 _logger.LogWarning("ModelState is invalid while updating a product.");
                 return View(productDto);
-            }
+            }*/
 
             try
             {

@@ -21,6 +21,7 @@ namespace Store.Infrastructure.Repositories
         {
            var query =  _context.Orders
               .Include(o => o.Product)
+               .Include(o => o.User)
               .AsQueryable();
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -31,6 +32,22 @@ namespace Store.Infrastructure.Repositories
                   .Skip((pageNumber - 1) * pageSize)
                   .Take(pageSize)
                   .ToListAsync();
+
+            return (pagedOrders, totalRecords);
+        }
+
+        public async Task<(List<Order>, int)> GetUserOrdersAsync(string userId, int pageNumber, int pageSize)
+        {
+            var query = _context.Orders
+                .Include(o => o.Product)
+                .Where(o => o.UserId == userId)
+                .AsQueryable();
+
+            var totalRecords = await query.CountAsync();
+            var pagedOrders = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             return (pagedOrders, totalRecords);
         }

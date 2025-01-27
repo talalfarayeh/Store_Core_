@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Store.Infrastructure.Models;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
 namespace Store.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
@@ -55,6 +56,11 @@ namespace Store.Infrastructure.Data
                 .Property(o => o.CustomerName)
                 .HasMaxLength(100)
                 .IsRequired();
+            modelBuilder.Entity<Order>()
+              .HasOne(o => o.User)
+              .WithMany(u => u.Orders)
+              .HasForeignKey(o => o.UserId)
+              .OnDelete(DeleteBehavior.Cascade);
 
 
         }

@@ -37,6 +37,7 @@ namespace Store.Core.Application.Mapping
                  .Map(dest => dest.CustomerName, src => src.CustomerName)
                  .Map(dest => dest.Quantity, src => src.Quantity)
                  .Map(dest => dest.ProductName, src => src.Product.ProductName)
+                    .Map(dest => dest.UserId, src => src.UserId)
              .Map(dest => dest.ProductID, src => src.Product.ProductID);
 
             TypeAdapterConfig<OrderDto, Order>.NewConfig()

@@ -4,7 +4,20 @@
   "libraries": [
     {
       "library": "bootstrap@5.3.3",
-      "destination": "wwwroot/bootstrap/"
+      "destination": "wwwroot/js/bootstrap/",
+      "files": [
+        "js/bootstrap.min.js",
+        "js/bootstrap.bundle.min.js",
+        "css/bootstrap.min.css",
+        "css/bootstrap.rtl.min.css"
+      ]
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/lib/jquery/",
+      "files": [
+        "jquery.min.js"
+      ]
     }
   ]
 }

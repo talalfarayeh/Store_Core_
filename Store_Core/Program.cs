@@ -6,6 +6,7 @@ using Store.Infrastructure.Repositories;
 using Store.Core.Application.Sarvice.ISarvice;
 using Store.Core.Application.Sarvice;
 using Store.Core.Application.Mapping;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Home/Dashboard";
+});
+
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<Supplier>), typeof(GenericRopository<Supplier>));
 builder.Services.AddScoped(typeof(IGenericRepository<Product>), typeof(GenericRopository<Product>));
@@ -34,7 +47,12 @@ builder.Logging.AddDebug();
 
 MappingConfig.RegisterMappings();
 var app = builder.Build();
-
+ 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await RoleInitializer.SeedRolesAndAdminAsync(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -53,6 +71,9 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Dashboard}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
 
 app.Run();

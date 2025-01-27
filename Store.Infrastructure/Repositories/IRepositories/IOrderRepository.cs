@@ -11,5 +11,6 @@ namespace Store.Infrastructure.Repositories.IRepositories
     {
         Task<(List<Order>,int)> GetAllOrdersWithProductsAsync(string searchTerm, int pageNumber, int pageSize);
         Task<Order> GetOrdersWithProductsByIdAsync(int id);
+        Task<(List<Order>, int)> GetUserOrdersAsync(string userId, int pageNumber, int pageSize);
     }
 }

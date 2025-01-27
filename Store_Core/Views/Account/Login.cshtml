@@ -1,0 +1,30 @@
+﻿@model Store_Core.ViewModels.LoginViewModel
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-lg p-4">
+            <h2 class="text-center mb-4">تسجيل الدخول</h2>
+
+            <form asp-action="Login" method="post">
+                <div class="mb-3">
+                    <label class="form-label">البريد الإلكتروني</label>
+                    <input asp-for="Email" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">كلمة المرور</label>
+                    <input asp-for="Password" type="password" class="form-control" required />
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">دخول</button>
+                </div>
+            </form>
+
+            <hr>
+
+            <p class="text-center mt-3">
+                ليس لديك حساب؟
+                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-secondary btn-sm">إنشاء حساب</a>
+            </p>
+        </div>
+    </div>
+</div>
