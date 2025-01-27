@@ -29,8 +29,7 @@
                         <td>@supplier.Phone</td>
                         <td>
                             <a href="@Url.Action("Edit", "Supplier", new { id = supplier.SupplierID })" class="btn btn-warning">Edit</a>
-@*                             <a href="@Url.Action("Details", "Supplier", new { id = supplier.SupplierID })" class="btn btn-info">Details</a>
- *@                            <a href="@Url.Action("Delete", "Supplier", new { id = supplier.SupplierID })" class="btn btn-danger">Delete</a>
+                              <a href="@Url.Action("Delete", "Supplier", new { id = supplier.SupplierID })" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                 }

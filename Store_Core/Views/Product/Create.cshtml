@@ -7,44 +7,70 @@
 <div class="container">
     <h1>Add Multiple Products</h1>
     <form asp-action="Create" method="post">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="productsTable">
             <thead>
                 <tr>
                     <th>Product Name</th>
                     <th>Quantity In Stock</th>
                     <th>Unit Price</th>
                     <th>Supplier Id</th>
+                    <th>Actions</th> 
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 0; i < Model.Products.Count; i++)
-                {
-                    <tr>
-                        <td>
-                            <input type="text" asp-for="Products[@i].ProductName" class="form-control" />
-                            <span asp-validation-for="Products[@i].ProductName" class="text-danger"></span>
-                        </td>
-                        <td>
-                            <input type="number" asp-for="Products[@i].QuantityInStock" class="form-control" />
-                            <span asp-validation-for="Products[@i].QuantityInStock" class="text-danger"></span>
-                        </td>
-                        <td>
-                            <input type="number" asp-for="Products[@i].UnitPrice" class="form-control" />
-                            <span asp-validation-for="Products[@i].UnitPrice" class="text-danger"></span>
-                        </td>
-                        <td>
-                            <input type="text" asp-for="Products[@i].SupplierID" class="form-control" />
-                            <span asp-validation-for="Products[@i].SupplierID" class="text-danger"></span>
-                        </td>
-                    </tr>
-                }
+                
             </tbody>
         </table>
 
+       
+        <button type="button" class="btn btn-success" id="addRow">Add Row</button>
+        
         <button type="submit" class="btn btn-primary">Add Products</button>
     </form>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let rowIndex = 0; 
+
+           
+            $("#addRow").click(function () {
+                let rowHtml = `
+                    <tr>
+                        <td>
+                           
+                            <input type="text" name="Products[${rowIndex}].ProductName" class="form-control" required />
+                        </td>
+                        <td>
+                          
+                            <input type="number" name="Products[${rowIndex}].QuantityInStock" class="form-control" required />
+                        </td>
+                        <td>
+                            
+                            <input type="number" name="Products[${rowIndex}].UnitPrice" class="form-control" required />
+                        </td>
+                        <td>
+                            
+                            <input type="text" name="Products[${rowIndex}].SupplierID" class="form-control" required />
+                        </td>
+                        <td>
+                           
+                            <button type="button" class="btn btn-danger removeRow">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                 
+                $("#productsTable tbody").append(rowHtml);
+                rowIndex++; 
+            });
+
+            
+            $(document).on("click", ".removeRow", function () {
+                $(this).closest("tr").remove();
+            });
+        });
+    </script>
 }

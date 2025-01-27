@@ -116,11 +116,11 @@ namespace Store_Core.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(ProductCreateUpdateDto productDto)
         {
-            if (!ModelState.IsValid)
+           /* if (!ModelState.IsValid)
             {
                 _logger.LogWarning("ModelState is invalid while updating a product.");
                 return View(productDto);
-            }
+            }*/
 
             try
             {

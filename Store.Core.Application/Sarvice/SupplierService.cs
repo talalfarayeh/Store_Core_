@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Store.Core.Application.DTOs;
 using Store.Core.Application.Sarvice.ISarvice;
 using Store.Infrastructure.Models;
@@ -18,11 +19,7 @@ namespace Store.Core.Application.Sarvice
         }
         public async Task AddSupplierAsync(SupplierDto supplierDto)
         {
-            var supplier = new Supplier
-            {
-                SupplierName = supplierDto.SupplierName,
-                Phone = supplierDto.Phone
-            };
+            var supplier = supplierDto.Adapt<Supplier>();
 
             await _repository.AddAsync(supplier);
         }
@@ -36,28 +33,19 @@ namespace Store.Core.Application.Sarvice
             if (supplier == null)
                 return null;
 
-            return new SupplierDto
-            {
-                SupplierID = supplier.SupplierID,
-                SupplierName = supplier.SupplierName,
-                Phone = supplier.Phone
-            };
-           
+            return supplier.Adapt<SupplierDto>();
+
         }
 
         public async Task<IEnumerable<SupplierDto>> GetSuppliersAllAsync()
         {
             var suppliers = await _repository.GetTableNoTracking().ToListAsync();
-            return suppliers.Select(supplier => new SupplierDto
-            {
-                SupplierID = supplier.SupplierID,
-                SupplierName = supplier.SupplierName,
-                Phone = supplier.Phone
-            }).ToList();
+            return suppliers.Adapt<List<SupplierDto>>();
         }
 
-        public async Task UpdateSupplierAsync(Supplier supplier)
+        public async Task UpdateSupplierAsync(SupplierDto supplierDto)
         {
+            var supplier = supplierDto.Adapt<Supplier>();
             await _repository.UpdateAsync(supplier);
         }
         public async Task DeleteSupplierAsync(int id)

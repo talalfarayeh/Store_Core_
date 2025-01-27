@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.Extensions.Logging;
 using Store.Core.Application.DTOs;
 using Store.Core.Application.Sarvice.ISarvice;
 using Store.Infrastructure.Models;
@@ -13,41 +14,47 @@ namespace Store.Core.Application.Sarvice
 {
     public class OrderService : IOrderService
     {
+        private readonly ILogger<OrderService> _logger;
         private readonly IOrderRepository _orderRepository;
         private readonly IGenericRepository<Product> _productRepository;
         private readonly IGenericRepository<Order> _genericRepository;
 
-        public OrderService(IGenericRepository<Product> productRepository, IOrderRepository orderRepository, IGenericRepository<Order> genericRepository)
+        public OrderService(ILogger<OrderService> logger, IGenericRepository<Product> productRepository, IOrderRepository orderRepository, IGenericRepository<Order> genericRepository)
         {
             _orderRepository = orderRepository;
             _genericRepository = genericRepository;
             _productRepository = productRepository;
+            _logger = logger;
         }
 
-       /* public async Task<List<OrderDto>> GetAllOrdersAsync()
+       
+
+        public async Task AddOrderAsync(OrderDto orderDto)
         {
-            var orders = await _orderRepository.GetAllOrdersWithProductsAsync();
-            return orders.Adapt<List<OrderDto>>();
-        }*/
+            try
+            {
 
-        public async Task  AddOrderAsync(OrderDto orderDto)
-        {
-            var product = await _productRepository.GetByIdAsync(orderDto.ProductID);
-            if (product == null)
-                throw new Exception("Product not found");
+                _logger.LogInformation("Fetching all.");
+                var product = await _productRepository.GetByIdAsync(orderDto.ProductID);
+                if (product == null)
+                    throw new Exception("Product not found");
 
-            if (product.QuantityInStock < orderDto.Quantity)
-                throw new Exception("Insufficient stock");
+                if (product.QuantityInStock < orderDto.Quantity)
+                    throw new Exception("Insufficient stock");
 
-            product.QuantityInStock -=orderDto.Quantity;
-            await _productRepository.UpdateAsync(product);
+                product.QuantityInStock -= orderDto.Quantity;
+                await _productRepository.UpdateAsync(product);
 
 
-            var order = orderDto.Adapt<Order>();
-            await _genericRepository.AddAsync(order);
- 
+                var order = orderDto.Adapt<Order>();
+                await _genericRepository.AddAsync(order);
+            }
+            catch (Exception)
+            {
+                throw;
+
+            }
         }
-
         public async Task<OrderDto> GetOrderByIdAsync(int id)
         {
             var order = await _orderRepository.GetOrdersWithProductsByIdAsync(id);

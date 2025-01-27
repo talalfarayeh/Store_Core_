@@ -9,7 +9,7 @@ namespace Store.Core.Application.Sarvice.ISarvice
         Task<IEnumerable<SupplierDto>> GetSuppliersAllAsync();
         Task<SupplierDto> GetSupplierByIdAsync(int id);
         Task AddSupplierAsync(SupplierDto supplierDto);
-        Task UpdateSupplierAsync(Supplier supplier);
+        Task UpdateSupplierAsync(SupplierDto supplierDto);
         Task DeleteSupplierAsync(int id);
 
     }
