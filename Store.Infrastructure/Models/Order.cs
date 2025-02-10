@@ -11,7 +11,7 @@ namespace Store.Infrastructure.Models
         public string UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public ApplicationUser User { get; set; } // ✅ ربط الطلب بالمستخدم
+        public ApplicationUser User { get; set; }  
         public string CustomerName { get; set; }
         public DateTime OrderDate { get; set; }
         public int Quantity { get; set; }

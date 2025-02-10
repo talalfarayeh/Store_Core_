@@ -1,0 +1,45 @@
+﻿@model Store_Core.ViewModels.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "تعديل الملف الشخصي";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center mb-4">تعديل الملف الشخصي</h2>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+                <div class="form-group mb-3">
+                    <label asp-for="FullName" class="form-label">الاسم الكامل</label>
+                    <input asp-for="FullName" class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ProfilePicture" class="form-label">الصورة الشخصية</label>
+                    <input type="file" name="profilePicture" class="form-control" accept="image/*" />
+                    <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

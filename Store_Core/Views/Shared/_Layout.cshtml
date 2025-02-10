@@ -1,36 +1,97 @@
-﻿﻿
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+@using Store_Core.Resources
+@inject IStringLocalizer<SharedResource> localizer
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var hideNavbarPages = new List<string> { "Login", "Register" };
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+    var defaultProfilePicture = "/uploads/default_profile.jpg"; 
+
+    var profilePicture = defaultProfilePicture;
+    var fullName = "User"; 
+
+    if (User.Identity.IsAuthenticated)
+    {
+        var user = await UserManager.GetUserAsync(User);
+        if (user != null)
+        {
+            profilePicture = user.ProfilePicture ?? defaultProfilePicture;
+            fullName = user.FullName ?? "User";
+        }
+
+       
+        profilePicture = !string.IsNullOrEmpty(profilePicture) ? Url.Content("/" + profilePicture.TrimStart('/')) : Url.Content(defaultProfilePicture);
+    }
+}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@(System.Globalization.CultureInfo.CurrentCulture.Name)">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Store_Core</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <a href="~/lib/bootstrap/css/bootstrap.css.map"></a>
-    <a href="~/lib/bootstrap/css/bootstrap.min.css.map"></a>
-    <a href="~/lib/bootstrap/css/bootstrap.rtl.css.map"></a>
-    <a href="~/lib/bootstrap/css/bootstrap.rtl.min.css.map"></a>
-    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/css/bootstrap.rtl.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/css/bootstrap.rtl.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/custom-styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Dashboard">Store_Core</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
+
+    @if (!hideNavbarPages.Contains(currentAction))
+    {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Dashboard">Store_Core</a>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul class="navbar-nav">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+                                       data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="@profilePicture" class="rounded-circle border border-2 border-primary me-2" width="40" height="40" alt="@fullName">
+                                        <span class="fw-bold">@fullName</span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="EditProfile">🖼️ @localizer[SharedResourceKeys.UpdatePicture]</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">🔑 @localizer[SharedResourceKeys.Profile]</a></li>
+                                        <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout">🚪 @localizer[SharedResourceKeys.Logout]</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link btn btn-primary text-white px-3 rounded-pill" asp-controller="Account" asp-action="Login">🔑 تسجيل الدخول</a>
+                                </li>
+                            }
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    🌍 @localizer[SharedResourceKeys.ChangeLanguage]
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Language" asp-action="SetLanguage" asp-route-culture="en" asp-route-returnUrl="@Context.Request.Path">🇬🇧 English</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Language" asp-action="SetLanguage" asp-route-culture="ar" asp-route-returnUrl="@Context.Request.Path">🇸🇦 العربية</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
+    }
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -38,30 +99,16 @@
     </div>
 
     <footer class="bg-light text-center py-3 mt-5 border-top">
-        <p class="mb-0">© 2025 - Store_Core</p>
+        <p class="mb-0 fw-bold">© 2025 - Store_Core</p>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <a href="~/lib/bootstrap/js/bootstrap.bundle.js.map"></a>
-    <a href="~/lib/bootstrap/js/bootstrap.bundle.min.js.map"></a>
-    <a href="~/lib/bootstrap/js/bootstrap.esm.js.map"></a>
-    <a href="~/lib/bootstrap/js/bootstrap.esm.min.js.map"></a>
-    <a href="~/lib/bootstrap/js/bootstrap.js.map"></a>
-    <a href="~/lib/bootstrap/js/bootstrap.min.js.map"></a>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.esm.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.esm.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

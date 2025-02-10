@@ -5,7 +5,7 @@
         <div class="card shadow-lg p-4">
             <h2 class="text-center mb-4">إنشاء حساب جديد</h2>
 
-            <form asp-action="Register" method="post">
+            <form asp-action="Register" method="post" enctype="multipart/form-data">
                  <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                 <div class="mb-3">
@@ -25,6 +25,14 @@
                     <input asp-for="Password" type="password" class="form-control" required placeholder="********" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
+                <div>
+                    <label>تأكيد كلمة المرور</label>
+                    <input asp-for="ConfirmPassword" type="password" required />
+                </div>
+                <div>
+                    <label>الصورة الشخصية</label>
+                    <input type="file" asp-for="ProfilePicture" accept="image/*" />
+                </div>
 
                 
 
@@ -43,8 +51,7 @@
     </div>
 </div>
 
-<!-- ✅ دعم التحقق من صحة الإدخالات باستخدام JavaScript -->
-@section Scripts {
+ @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
