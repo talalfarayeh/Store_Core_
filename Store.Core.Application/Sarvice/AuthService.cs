@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Store.Infrastructure.Models;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Store.Core.Application.Sarvice
@@ -19,36 +21,61 @@ namespace Store.Core.Application.Sarvice
 
         public async Task<bool> RegisterUser(string email, string password, string fullName)
         {
-            var user = new ApplicationUser { UserName = email, Email = email, FullName = fullName };
-            var result = await _userManager.CreateAsync(user, password);
+            var user = new ApplicationUser
+            {
+                UserName = email,
+                Email = email,
+                FullName = fullName,
+                
+            };
 
+            var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded)
             {
                 return false;
             }
 
-             if (!await _roleManager.RoleExistsAsync("User"))
-            {
-                await _roleManager.CreateAsync(new IdentityRole("User"));
-            }
-
             await _userManager.AddToRoleAsync(user, "User");
+            await _signInManager.SignInAsync(user, isPersistent: false);
 
-             await _signInManager.SignInAsync(user, isPersistent: false);
             return true;
         }
 
+
+
+
         public async Task<bool> LoginUser(string email, string password)
         {
-             var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 return false;
             }
 
-             var result = await _signInManager.PasswordSignInAsync(user.Email, password, false, false);
-            return result.Succeeded;
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, false);
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+
+            // ✅ تحميل الصورة الافتراضية إذا لم يكن لدى المستخدم صورة
+            var profilePicturePath = string.IsNullOrEmpty(user.ProfilePicture) ? "/uploads/default-avatar.png" : $"/{user.ProfilePicture}";
+
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim("FullName", user.FullName ?? "User"),
+        new Claim("ProfilePicture", profilePicturePath)
+    };
+
+            var claimsIdentity = new ClaimsIdentity(claims, "ApplicationCookie");
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return true;
         }
+
 
         public async Task Logout()
         {

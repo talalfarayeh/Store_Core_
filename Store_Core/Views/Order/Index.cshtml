@@ -57,8 +57,8 @@
                                     <td>@product.Quantity</td>
                                     <td>@product.OrderDate</td>
                                     <td>
-                                        <a href="@Url.Action("Edit", "Product", new { id = product.OrderID })" class="btn btn-warning">Edit</a>
-                                        <a href="@Url.Action("Delete", "Product", new { id =product.OrderID })" class="btn btn-danger">Delete</a>
+                                        <a href="@Url.Action("Edit", "Order", new { id = product.OrderID })" class="btn btn-warning">Edit</a>
+                                        <a href="@Url.Action("Delete", "Order", new { id =product.OrderID })" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
                             }
