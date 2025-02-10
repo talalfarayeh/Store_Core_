@@ -101,6 +101,7 @@ namespace Store_Core.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(int id)
         {
             _logger.LogInformation("Fetching order for editing. OrderId: {OrderId}", id);

@@ -1,25 +1,40 @@
-﻿@{
-    ViewBag.Title = "Dashboard";
-}
+﻿@using Microsoft.Extensions.Localization
+@using Store_Core.Resources
+  @inject IStringLocalizer<SharedResource> Localizer
+
 
 <div class="dashboard-container">
     <header>
-        <h1>Welcome to Store Management System</h1>
-        <p>Choose a section to manage:</p>
+        <h1>@Localizer[SharedResourceKeys.WelcomeMessage]</h1>
+        <p>@Localizer[SharedResourceKeys.ChooseSection]</p>
     </header>
     <main class="dashboard-menu">
-        <a href="@Url.Action("Index", "Supplier")" class="dashboard-item suppliers">
-            <h2>Manage Suppliers</h2>
-        </a>
-        <a href="@Url.Action("Index", "Product")" class="dashboard-item products">
-            <h2>Manage Products</h2>
-        </a>
-        
-        <a href="@Url.Action("Index", "Order")" class="dashboard-item products">
-            <h2>Manage Order</h2>
-        </a>
-        <a href="@Url.Action("Index", "StockMovement")" class="dashboard-item products">
-            <h2>Manage StockMovement</h2>
-        </a>
+
+        @if (User.IsInRole("User"))
+        {
+            <a href="@Url.Action("Index", "Order")" class="dashboard-item orders">
+                <h2>@Localizer[SharedResourceKeys.ManageOrders]</h2>
+            </a>
+        }
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a href="@Url.Action("Index", "Supplier")" class="dashboard-item suppliers">
+                <h2>@Localizer[SharedResourceKeys.ManageSuppliers]</h2>
+            </a>
+
+            <a href="@Url.Action("Index", "Product")" class="dashboard-item products">
+                <h2>@Localizer[SharedResourceKeys.ManageProducts]</h2>
+            </a>
+
+            <a href="@Url.Action("Index", "StockMovement")" class="dashboard-item stock">
+                <h2>@Localizer[SharedResourceKeys.ManageStockMovement]</h2>
+            </a>
+
+            <a href="@Url.Action("Index", "Order")" class="dashboard-item orders">
+                <h2>@Localizer[SharedResourceKeys.ManageOrders]</h2>
+            </a>
+        }
+
     </main>
 </div>
