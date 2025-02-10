@@ -7,6 +7,7 @@ using Store.Core.Application.Sarvice.ISarvice;
 using Store.Core.Application.Sarvice;
 using Store.Core.Application.Mapping;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,10 +45,28 @@ builder.Services.AddScoped<IStockMovementRepository, StockMovementRepository>();
 builder.Logging.AddConsole();  
 builder.Logging.AddDebug();
 
-
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+});
 MappingConfig.RegisterMappings();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
 var app = builder.Build();
+
  
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+    c.RoutePrefix = "swagger"; 
+});
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -66,6 +85,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors("AllowAllOrigins");
+app.UseAuthentication();
 
 app.UseAuthorization();
 
