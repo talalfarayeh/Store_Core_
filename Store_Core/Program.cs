@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Localization;
 using Store_Core.Resources;
 
+
 var builder = WebApplication.CreateBuilder(args);
  
 builder.Services.AddControllersWithViews();
@@ -58,7 +59,11 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IStockMovementRepository, StockMovementRepository>();
 
- builder.Logging.AddConsole();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
+ 
+
+builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
  builder.Services.AddEndpointsApiExplorer();
@@ -72,6 +77,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddPolicy("AllowAllOrigins", builder =>
         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
+
 
 var app = builder.Build();
 

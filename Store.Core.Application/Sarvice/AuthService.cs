@@ -19,26 +19,28 @@ namespace Store.Core.Application.Sarvice
             _roleManager = roleManager;
         }
 
-        public async Task<bool> RegisterUser(string email, string password, string fullName)
+        public async Task<IdentityResult> RegisterUser(string email, string password, string fullName)
         {
             var user = new ApplicationUser
             {
                 UserName = email,
                 Email = email,
-                FullName = fullName,
-                
+                FullName = fullName
             };
 
             var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded)
             {
-                return false;
+                return result; // إرجاع الأخطاء إذا فشل التسجيل
             }
 
+            // تعيين دور المستخدم
             await _userManager.AddToRoleAsync(user, "User");
+
+            // تسجيل الدخول بعد التسجيل مباشرة
             await _signInManager.SignInAsync(user, isPersistent: false);
 
-            return true;
+            return result;
         }
 
 
